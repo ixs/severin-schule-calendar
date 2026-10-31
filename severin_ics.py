@@ -26,6 +26,8 @@ TABLE_XPATH = (
 )
 HEADING_XPATH = '//h2[contains(@class, "module-table__heading")]'
 
+HOLIDAY_EMOJI = "☀️"  # prefixed to events containing "schulfrei"
+
 log = logging.getLogger("severin_ics")
 
 DATE_RE = re.compile(r"(\d{1,2})\.(\d{1,2})\.(\d{4,5})?")
@@ -149,6 +151,8 @@ def build_calendar(rows: list[dict], sy: int) -> Calendar:
         start, end = span
         for block in clean_blocks(cells[1]["value"]):
             summary = summarize(block)
+            if "schulfrei" in block.casefold():
+                summary = f"{HOLIDAY_EMOJI} {summary}"
             log.debug(
                 "[%s] OUT  %s .. %s (inclusive) summary=%r block=%r",
                 row.get("id"), start, end, summary, block,
