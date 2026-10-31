@@ -34,16 +34,17 @@ DAY_RANGE_RE = re.compile(
 )
 
 
-def fetch(url: str) -> str:
+def fetch(url: str) -> bytes:
     resp = requests.get(
         url, headers={"User-Agent": "Mozilla/5.0 (severin-ics-feed)"}, timeout=30
     )
     resp.raise_for_status()
-    resp.encoding = resp.apparent_encoding if not resp.encoding else resp.encoding
-    return resp.text
+    # Return raw bytes: lxml honours <meta charset>, whereas requests would
+    # guess ISO-8859-1 when the Content-Type header has no charset.
+    return resp.content
 
 
-def extract_table(page: str) -> tuple[list[dict], int]:
+def extract_table(page: bytes) -> tuple[list[dict], int]:
     """Return (rows, school_year_start)."""
     tree = lxml_html.fromstring(page)
     scripts = tree.xpath(TABLE_XPATH)
@@ -186,7 +187,7 @@ def main() -> int:
         format="%(levelname)s: %(message)s",
         stream=sys.stderr,
     )
-    page = args.html_file.read_text(encoding="utf-8") if args.html_file else fetch(URL)
+    page = args.html_file.read_bytes() if args.html_file else fetch(URL)
     rows, sy = extract_table(page)
     if args.dump_json:
         print(json.dumps({"school_year": sy, "rows": rows}, indent=2, ensure_ascii=False))
