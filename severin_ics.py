@@ -129,8 +129,8 @@ def build_calendar(rows: list[dict], sy: int) -> Calendar:
     cal.add("method", "PUBLISH")
     cal.add("x-wr-calname", f"LVR-Severin-Schule {sy}/{sy + 1}")
     cal.add("x-wr-timezone", "Europe/Berlin")
-    cal.add("refresh-interval;value=duration", "P1D")
-    cal.add("x-published-ttl", "P1D")
+    cal.add("refresh-interval;value=duration", "P7D")
+    cal.add("x-published-ttl", "P7D")
     # Constant stamp so unchanged data gives an identical file (no noisy commits).
     stamp = datetime(sy, 8, 1, tzinfo=timezone.utc)
 
