@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LVR-Severin-Schule – Terminkalender</title>
+</head>
+<body>
+  <h1>LVR-Severin-Schule – Terminkalender</h1>
+  <p>Automatisch wöchentlich aus der
+    <a href="https://www.lvr.de/severin-schule/aktuelles/termine/">Terminseite der Schule</a>
+    erzeugt.</p>
+  <ul>
+    <li><a href="severin-schule.ics" download>ICS-Datei herunterladen</a></li>
+    <li><a id="webcal" href="#">Kalender abonnieren (webcal)</a></li>
+  </ul>
+  <p>Feed-URL: <code id="url"></code></p>
+  <script>
+    const url = new URL("severin-schule.ics", location.href).href;
+    document.getElementById("url").textContent = url;
+    document.getElementById("webcal").href = url.replace(/^https?:/, "webcal:");
+  </script>
+</body>
+</html>
